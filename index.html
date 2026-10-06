@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anatomi Learning - FK Semester 1</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>🩺 Anatomi Learning</h1>
+            <p class="subtitle">Belajar Anatomi untuk Mahasiswi FK Semester 1</p>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="nav" id="mainNav">
+            <button class="nav-btn active" data-mode="home">🏠 Beranda</button>
+            <button class="nav-btn" data-mode="flashcard">🃏 Flashcard</button>
+            <button class="nav-btn" data-mode="quiz">📝 Kuis</button>
+            <button class="nav-btn" data-mode="kasus">🏥 Kasus PBL</button>
+            <button class="nav-btn" data-mode="stats">📊 Statistik</button>
+            <button class="nav-btn" data-mode="search">🔍 Cari</button>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="content" id="mainContent">
+            <!-- Home Screen -->
+            <div class="screen active" id="homeScreen">
+                <div class="welcome-card">
+                    <h2>Selamat Datang! 👋</h2>
+                    <p>Pilih mode belajar yang sesuai dengan kebutuhanmu:</p>
+                    
+                    <div class="mode-grid">
+                        <div class="mode-card" onclick="switchMode('flashcard')">
+                            <div class="mode-icon">🃏</div>
+                            <h3>Flashcard</h3>
+                            <p>Hafal istilah anatomi dengan metode repetisi spasi</p>
+                        </div>
+                        
+                        <div class="mode-card" onclick="switchMode('quiz')">
+                            <div class="mode-icon">📝</div>
+                            <h3>Kuis Pilihan Ganda</h3>
+                            <p>Uji pemahamanmu dengan 10 soal per sesi</p>
+                        </div>
+                        
+                        <div class="mode-card" onclick="switchMode('kasus')">
+                            <div class="mode-icon">🏥</div>
+                            <h3>Kasus Klinis (PBL)</h3>
+                            <p>Latihan soal berbasis skenario klinis</p>
+                        </div>
+                        
+                        <div class="mode-card" onclick="switchMode('stats')">
+                            <div class="mode-icon">📊</div>
+                            <h3>Statistik</h3>
+                            <p>Lihat progress dan performa belajarmu</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Flashcard Screen -->
+            <div class="screen" id="flashcardScreen">
+                <div class="category-selector">
+                    <label>Pilih Kategori:</label>
+                    <select id="flashcardCategory">
+                        <option value="all">Semua Kategori</option>
+                        <option value="tulang">Tulang (Osteologi)</option>
+                        <option value="otot">Otot (Miologi)</option>
+                        <option value="organ">Organ (Viscera)</option>
+                        <option value="istilah">Istilah Dasar</option>
+                    </select>
+                    <button class="btn-primary" onclick="startFlashcard()">Mulai Belajar</button>
+                </div>
+
+                <div class="flashcard-container" id="flashcardContainer" style="display: none;">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="flashcardProgress"></div>
+                    </div>
+                    <p class="card-counter" id="cardCounter"></p>
+
+                    <div class="flashcard" id="flashcard" onclick="flipCard()">
+                        <div class="flashcard-inner">
+                            <div class="flashcard-front">
+                                <p id="cardFront"></p>
+                            </div>
+                            <div class="flashcard-back">
+                                <p id="cardBack"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flashcard-actions">
+                        <button class="btn-belum" onclick="markCard(false)">❌ Belum Hafal</button>
+                        <button class="btn-hafal" onclick="markCard(true)">✅ Hafal</button>
+                    </div>
+
+                    <button class="btn-secondary" onclick="exitFlashcard()">Selesai Belajar</button>
+                </div>
+            </div>
+
+            <!-- Quiz Screen -->
+            <div class="screen" id="quizScreen">
+                <div class="category-selector">
+                    <label>Pilih Kategori Kuis:</label>
+                    <select id="quizCategory">
+                        <option value="all">Campuran (Semua Kategori)</option>
+                        <option value="tulang">Tulang (Osteologi)</option>
+                        <option value="otot">Otot (Miologi)</option>
+                        <option value="organ">Organ (Viscera)</option>
+                        <option value="istilah">Istilah Dasar</option>
+                    </select>
+                    <button class="btn-primary" onclick="startQuiz()">Mulai Kuis</button>
+                </div>
+
+                <div class="quiz-container" id="quizContainer" style="display: none;">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="quizProgress"></div>
+                    </div>
+                    <p class="question-counter" id="questionCounter"></p>
+
+                    <div class="question-card">
+                        <h3 id="questionText"></h3>
+                        <div class="options" id="optionsContainer"></div>
+                    </div>
+
+                    <button class="btn-primary" id="nextQuizBtn" onclick="nextQuestion()" style="display: none;">Soal Berikutnya</button>
+                </div>
+
+                <div class="quiz-result" id="quizResult" style="display: none;">
+                    <h2>Hasil Kuis 🎉</h2>
+                    <div class="score-display">
+                        <p class="score" id="finalScore"></p>
+                        <p id="scoreMessage"></p>
+                    </div>
+                    <div id="quizSummary"></div>
+                    <button class="btn-primary" onclick="restartQuiz()">Kuis Lagi</button>
+                    <button class="btn-secondary" onclick="exitQuiz()">Kembali</button>
+                </div>
+            </div>
+
+            <!-- Kasus PBL Screen -->
+            <div class="screen" id="kasusScreen">
+                <div class="category-selector">
+                    <button class="btn-primary" onclick="startKasus()">Mulai Kasus Klinis</button>
+                </div>
+
+                <div class="kasus-container" id="kasusContainer" style="display: none;">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="kasusProgress"></div>
+                    </div>
+                    <p class="question-counter" id="kasusCounter"></p>
+
+                    <div class="kasus-card">
+                        <div class="kasus-scenario">
+                            <h3>Skenario Klinis</h3>
+                            <p id="kasusScenario"></p>
+                        </div>
+                        <h4 id="kasusQuestion"></h4>
+                        <div class="options" id="kasusOptionsContainer"></div>
+                    </div>
+
+                    <button class="btn-primary" id="nextKasusBtn" onclick="nextKasus()" style="display: none;">Kasus Berikutnya</button>
+                </div>
+
+                <div class="kasus-result" id="kasusResult" style="display: none;">
+                    <h2>Hasil Kasus Klinis 🎉</h2>
+                    <div class="score-display">
+                        <p class="score" id="kasusScore"></p>
+                        <p id="kasusMessage"></p>
+                    </div>
+                    <div id="kasusSummary"></div>
+                    <button class="btn-primary" onclick="restartKasus()">Latihan Lagi</button>
+                    <button class="btn-secondary" onclick="exitKasus()">Kembali</button>
+                </div>
+            </div>
+
+            <!-- Statistics Screen -->
+            <div class="screen" id="statsScreen">
+                <h2>Statistik Belajar 📊</h2>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">🃏</div>
+                        <h3 id="totalCardsStudied">0</h3>
+                        <p>Kartu Dipelajari</p>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">✅</div>
+                        <h3 id="totalMastered">0</h3>
+                        <p>Kartu Dikuasai</p>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">📝</div>
+                        <h3 id="totalQuizzes">0</h3>
+                        <p>Kuis Selesai</p>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">🎯</div>
+                        <h3 id="averageScore">0%</h3>
+                        <p>Rata-rata Skor</p>
+                    </div>
+                </div>
+
+                <div class="category-stats">
+                    <h3>Akurasi per Kategori</h3>
+                    <div id="categoryAccuracy"></div>
+                </div>
+
+                <div class="difficult-cards">
+                    <h3>Kartu Tersulit (Paling Sering Salah)</h3>
+                    <div id="difficultCardsList"></div>
+                </div>
+
+                <button class="btn-danger" onclick="resetStats()">Reset Semua Data</button>
+            </div>
+
+            <!-- Search Screen -->
+            <div class="screen" id="searchScreen">
+                <h2>Pencarian Istilah 🔍</h2>
+                
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Cari istilah anatomi..." oninput="performSearch()">
+                </div>
+
+                <div class="search-filters">
+                    <label>Filter Kategori:</label>
+                    <select id="searchCategory" onchange="performSearch()">
+                        <option value="all">Semua</option>
+                        <option value="tulang">Tulang</option>
+                        <option value="otot">Otot</option>
+                        <option value="organ">Organ</option>
+                        <option value="istilah">Istilah Dasar</option>
+                    </select>
+                </div>
+
+                <div id="searchResults" class="search-results"></div>
+            </div>
+        </main>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

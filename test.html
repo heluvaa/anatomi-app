@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Suite - Anatomi App</title>
+    <style>
+        body { font-family: monospace; padding: 20px; background: #f0f0f0; }
+        .test { padding: 10px; margin: 5px 0; border-radius: 5px; }
+        .pass { background: #d4edda; color: #155724; }
+        .fail { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Anatomi App Test Suite</h1>
+    <div id="results"></div>
+    
+    <script src="data.js"></script>
+    <script>
+        const results = document.getElementById('results');
+        
+        function log(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = 'test ' + type;
+            div.textContent = message;
+            results.appendChild(div);
+        }
+        
+        // Test 1: Data structure
+        log('Test 1: Checking data structure...', 'info');
+        if (typeof tulangCards !== 'undefined' && Array.isArray(tulangCards)) {
+            log('✅ tulangCards defined and is array (' + tulangCards.length + ' items)', 'pass');
+        } else {
+            log('❌ tulangCards not properly defined', 'fail');
+        }
+        
+        if (typeof ototCards !== 'undefined' && Array.isArray(ototCards)) {
+            log('✅ ototCards defined and is array (' + ototCards.length + ' items)', 'pass');
+        } else {
+            log('❌ ototCards not properly defined', 'fail');
+        }
+        
+        if (typeof organCards !== 'undefined' && Array.isArray(organCards)) {
+            log('✅ organCards defined and is array (' + organCards.length + ' items)', 'pass');
+        } else {
+            log('❌ organCards not properly defined', 'fail');
+        }
+        
+        if (typeof istilahCards !== 'undefined' && Array.isArray(istilahCards)) {
+            log('✅ istilahCards defined and is array (' + istilahCards.length + ' items)', 'pass');
+        } else {
+            log('❌ istilahCards not properly defined', 'fail');
+        }
+        
+        if (typeof kasusKlinis !== 'undefined' && Array.isArray(kasusKlinis)) {
+            log('✅ kasusKlinis defined and is array (' + kasusKlinis.length + ' items)', 'pass');
+        } else {
+            log('❌ kasusKlinis not properly defined', 'fail');
+        }
+        
+        // Test 2: Total count
+        log('Test 2: Checking total counts...', 'info');
+        const totalFlashcards = allFlashcards.length;
+        const totalKasus = kasusKlinis.length;
+        
+        if (totalFlashcards >= 100) {
+            log('✅ Total flashcards: ' + totalFlashcards + ' (minimum 100)', 'pass');
+        } else {
+            log('❌ Total flashcards: ' + totalFlashcards + ' (need minimum 100)', 'fail');
+        }
+        
+        if (totalKasus >= 20) {
+            log('✅ Total kasus klinis: ' + totalKasus + ' (minimum 20)', 'pass');
+        } else {
+            log('❌ Total kasus klinis: ' + totalKasus + ' (need minimum 20)', 'fail');
+        }
+        
+        // Test 3: Card structure
+        log('Test 3: Checking card structure...', 'info');
+        let structureValid = true;
+        
+        allFlashcards.forEach((card, idx) => {
+            if (!card.front || !card.back || !card.category) {
+                log('❌ Card ' + idx + ' missing required fields', 'fail');
+                structureValid = false;
+            }
+        });
+        
+        if (structureValid) {
+            log('✅ All flashcards have required fields (front, back, category)', 'pass');
+        }
+        
+        // Test 4: Kasus structure
+        log('Test 4: Checking kasus structure...', 'info');
+        let kasusValid = true;
+        
+        kasusKlinis.forEach((kasus, idx) => {
+            if (!kasus.scenario || !kasus.question || !kasus.options || 
+                kasus.options.length !== 4 || typeof kasus.correct !== 'number' ||
+                !kasus.explanation || !kasus.category) {
+                log('❌ Kasus ' + idx + ' missing or invalid fields', 'fail');
+                kasusValid = false;
+            }
+        });
+        
+        if (kasusValid) {
+            log('✅ All kasus have required fields and 4 options', 'pass');
+        }
+        
+        // Test 5: Categories
+        log('Test 5: Checking categories...', 'info');
+        const categories = ['tulang', 'otot', 'organ', 'istilah'];
+        const foundCategories = [...new Set(allFlashcards.map(c => c.category))];
+        
+        const allCategoriesPresent = categories.every(cat => foundCategories.includes(cat));
+        if (allCategoriesPresent) {
+            log('✅ All categories present: ' + foundCategories.join(', '), 'pass');
+        } else {
+            log('❌ Missing categories. Found: ' + foundCategories.join(', '), 'fail');
+        }
+        
+        // Summary
+        log('='.repeat(50), 'info');
+        log('📊 SUMMARY:', 'info');
+        log('Total Flashcards: ' + totalFlashcards, 'info');
+        log('  - Tulang: ' + tulangCards.length, 'info');
+        log('  - Otot: ' + ototCards.length, 'info');
+        log('  - Organ: ' + organCards.length, 'info');
+        log('  - Istilah: ' + istilahCards.length, 'info');
+        log('Total Kasus Klinis: ' + totalKasus, 'info');
+        log('='.repeat(50), 'info');
+        log('✅ All tests completed!', 'pass');
+    </script>
+</body>
+</html>
